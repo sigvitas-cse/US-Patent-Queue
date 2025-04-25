@@ -74,22 +74,36 @@ export default function Dashboard() {
             <hr className="my-4 border-gray-300 dark:border-gray-600" />
             <p className="text-lg">This is your personalized dashboard. You can add stats, charts, and much more!</p>
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-bold mb-2">📦 Projects</h2>
-              <p className="text-3xl font-bold">6</p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-bold mb-2">🕒 Hours</h2>
-              <p className="text-3xl font-bold">124</p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
-              <h2 className="text-xl font-bold mb-2">🚀 Progress</h2>
-              <p className="text-3xl font-bold">80%</p>
+          {/* Search Bar */}
+          <div className="mb-10 flex items-center justify-between flex-wrap gap-4">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Dashboard Overview</h2>
+            <div className="relative w-full md:w-96">
+              <input
+                type="text"
+                placeholder=" Search Patent..."
+                className="w-full py-3 pl-12 pr-4 rounded-full bg-white dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
+              />
+              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">
+                🔍
+              </div>
             </div>
           </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Total Projects Card */}
+              <div className="bg-gradient-to-r from-green-400 to-green-600 dark:from-green-600 dark:to-green-800 p-10 rounded-3xl shadow-2xl text-white text-center transform transition duration-300 hover:scale-105">
+                <h2 className="text-3xl font-extrabold mb-6">📦 Total Projects</h2>
+                <p className="text-6xl font-black">6</p>
+              </div>
+
+              {/* Hours Spent Card */}
+              <div className="bg-gradient-to-r from-purple-500 to-purple-700 dark:from-purple-700 dark:to-purple-900 p-10 rounded-3xl shadow-2xl text-white text-center transform transition duration-300 hover:scale-105">
+                <h2 className="text-3xl font-extrabold mb-6">🕒 Hours Spent</h2>
+                <p className="text-6xl font-black">124</p>
+              </div>
+            </div>
+
         </main>
       </div>
     </div>

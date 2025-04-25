@@ -79,9 +79,9 @@ export default function Dashboard() {
               setActiveTab(tab);
               setSidebarOpen(false); // Close on small screen
             }}
-            className={`block w-full text-left px-4 py-2 rounded-lg mb-2 font-medium ${
+            className={`block w-full text-left px-4 py-2 rounded-lg mb-2 font-medium transition-all duration-300 ease-in-out ${
               activeTab === tab
-                ? "bg-purple-600 text-white"
+                ? "bg-purple-600 text-white transform scale-105"
                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
             }`}
           >
@@ -104,7 +104,7 @@ export default function Dashboard() {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full text-left px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-100 dark:hover:bg-red-600 dark:text-red-400"
+          className="w-full text-left px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-100 dark:hover:bg-red-600 dark:text-red-400 transition-all duration-300 ease-in-out"
         >
           Logout
         </button>
@@ -119,68 +119,65 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="flex-1 p-6">
-        <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
-          <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 capitalize">
+        <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10 transform transition-all duration-500 ease-in-out scale-100 hover:scale-105">
+            <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-gray-200 capitalize">
             {activeTab}
-          </h1>
+            </h1>
 
-          {/* Profile Tab */}
-          {activeTab === "profile" && (
-            <div className="space-y-6">
-              {["name", "email", "phone"].map((field) => (
+            {/* Profile Tab */}
+            {activeTab === "profile" && (
+            <div className="space-y-8">
+                {["name", "email", "phone"].map((field) => (
                 <div key={field}>
-                  <label className="block text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300 capitalize">
+                    <label className="block text-lg font-semibold mb-2 text-gray-700 dark:text-gray-300 capitalize">
                     {field}
-                  </label>
-                  <input
+                    </label>
+                    <input
                     type={field === "email" ? "email" : "text"}
                     name={field}
                     value={profile[field]}
                     onChange={handleProfileChange}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
+                    className="w-full px-5 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ease-in-out"
+                    />
                 </div>
-              ))}
-              <button
+                ))}
+                <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className={`w-full ${
-                  isSaving ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"
-                } text-white py-2 rounded-lg transition`}
-              >
+                className={`w-full ${isSaving ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"} text-white py-3 rounded-lg text-lg transition-all duration-300 ease-in-out transform hover:scale-105`}
+                >
                 {isSaving ? "Saving..." : "💾 Save Profile"}
-              </button>
+                </button>
             </div>
-          )}
+            )}
 
-          {/* Settings Tab */}
-          {activeTab === "settings" && (
-            <div className="space-y-6">
-              {[{ label: "Notifications", name: "notifications" }].map((setting) => (
+            {/* Settings Tab */}
+            {activeTab === "settings" && (
+            <div className="space-y-8">
+                {[{ label: "Notifications", name: "notifications" }].map((setting) => (
                 <div className="flex items-center justify-between" key={setting.name}>
-                  <label className="text-gray-700 dark:text-gray-300 font-medium">{setting.label}</label>
-                  <input
+                    <label className="text-gray-700 dark:text-gray-300 font-medium text-lg">{setting.label}</label>
+                    <input
                     type="checkbox"
                     name={setting.name}
                     checked={settings[setting.name]}
                     onChange={handleSettingsChange}
-                    className="h-5 w-5 accent-purple-600"
-                  />
+                    className="h-6 w-6 accent-purple-600"
+                    />
                 </div>
-              ))}
-              <button
+                ))}
+                <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className={`w-full ${
-                  isSaving ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"
-                } text-white py-2 rounded-lg transition`}
-              >
+                className={`w-full ${isSaving ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"} text-white py-3 rounded-lg text-lg transition-all duration-300 ease-in-out transform hover:scale-105`}
+                >
                 {isSaving ? "Saving..." : "⚙️ Save Settings"}
-              </button>
+                </button>
             </div>
-          )}
+            )}
         </div>
-      </main>
+        </main>
+
     </div>
   );
 }
