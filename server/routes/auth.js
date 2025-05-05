@@ -78,7 +78,7 @@ router.post('/api/auth/forgot-password', async (req, res) => {
         service: 'gmail',
         auth: {
           user: 'darshan@sigvitas.com',
-          pass: 'nkpt ixhc gsgo yzyh',
+          pass: 'aqhf klky wpct uuuu',
         },
       });
   
