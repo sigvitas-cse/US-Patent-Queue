@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Profile from "./pages/Profile";
 import VerifyOtp from './components/VerifyOtp';
 import ResetPassword from './components/ResetPassword';
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/settings" element={<Settings />} />
       <Route
         path="/dashboard"
         element={

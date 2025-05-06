@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { Menu, X } from "lucide-react"; // Icons
+import { Menu, X, User, Settings, LogOut, Home } from "lucide-react"; // Icons
 
-export default function Dashboard() {
+export default function Profile() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("profile");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -46,138 +46,219 @@ export default function Dashboard() {
   };
 
   const handleLogout = () => {
-    // Handle logout logic here (e.g., clear session, navigate to login)
     toast.success("Logged out successfully!");
-    navigate("/login"); // Redirect to login screen
+    navigate("/login");
   };
 
+  const handleBackToDashboard = () => {
+    navigate("/dashboard");
+  };
+
+  const tabs = [
+    { name: "dashboard", label: "Dashboard", icon: <Home size={20} /> },
+    { name: "profile", label: "Profile", icon: <User size={20} /> },
+    { name: "settings", label: "Settings", icon: <Settings size={20} /> },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col md:flex-row transition-colors">
-      <Toaster />
+    <div className={`${settings.darkMode ? "dark" : ""}`}>
+      <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+        <Toaster />
 
-      {/* Sidebar */}
-      <aside
-        className={`${
-          sidebarOpen ? "block" : "hidden"
-        } md:block w-full md:w-64 bg-white dark:bg-gray-800 p-4 shadow-md transition-all fixed md:static z-50`}
-      >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-purple-600 dark:text-purple-400">Dashboard</h2>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="md:hidden text-gray-600 dark:text-gray-300"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        {/* Sidebar Items */}
-        {["dashboard", "profile", "settings"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => {
-              setActiveTab(tab);
-              setSidebarOpen(false); // Close on small screen
-            }}
-            className={`block w-full text-left px-4 py-2 rounded-lg mb-2 font-medium transition-all duration-300 ease-in-out ${
-              activeTab === tab
-                ? "bg-purple-600 text-white transform scale-105"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
-
-        {/* Dark Mode Toggle */}
-        <div className="flex items-center justify-between mb-4">
-          <label className="text-gray-700 dark:text-gray-300 font-medium">Dark Mode</label>
-          <input
-            type="checkbox"
-            name="darkMode"
-            checked={settings.darkMode}
-            onChange={handleSettingsChange}
-            className="h-5 w-5 accent-purple-600"
-          />
-        </div>
-
-        {/* Logout Button */}
+        {/* Toggle Button for Small Screens */}
         <button
-          onClick={handleLogout}
-          className="w-full text-left px-4 py-2 rounded-lg font-medium text-red-600 hover:bg-red-100 dark:hover:bg-red-600 dark:text-red-400 transition-all duration-300 ease-in-out"
+          onClick={() => setSidebarOpen(true)}
+          className="md:hidden fixed top-2 left-2 sm:top-4 sm:left-4 z-50 p-3 bg-purple-500 text-white rounded-full shadow-lg hover:bg-purple-600 transition-transform duration-300 transform hover:scale-110 focus:outline-none"
         >
-          Logout
+          <Menu size={24} />
         </button>
-      </aside>
 
-      {/* Hamburger button for small screen */}
-      <div className="md:hidden p-4">
-        <button onClick={() => setSidebarOpen(true)} className="text-gray-600 dark:text-gray-300">
-          <Menu size={28} />
-        </button>
-      </div>
+        {/* Sidebar */}
+        <aside
+          className={`
+            w-64 bg-white dark:bg-gray-800 shadow-md p-6 flex flex-col justify-between
+            fixed top-0 left-0 h-full z-40
+            transform transition-transform duration-300 ease-in-out
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+            md:translate-x-0 md:static md:h-auto
+          `}
+        >
+          <div>
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-2xl font-bold text-purple-600 dark:text-purple-400">🧩 MyDashboard</h2>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="md:hidden text-gray-600 dark:text-gray-300"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <nav className="space-y-2">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.name}
+                  onClick={() => {
+                    setActiveTab(tab.name);
+                    setSidebarOpen(false);
+                  }}
+                  className={`
+                    w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left font-medium transition-all duration-300
+                    ${
+                      activeTab === tab.name
+                        ? "bg-purple-600 text-white shadow-md"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-purple-800"
+                    }
+                  `}
+                >
+                  {tab.icon}
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <label className="text-gray-700 dark:text-gray-300 font-medium">Dark Mode</label>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="darkMode"
+                  checked={settings.darkMode}
+                  onChange={handleSettingsChange}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-500 dark:peer-focus:ring-purple-400 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-500"></div>
+              </label>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left font-medium text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-600 transition-all duration-300"
+            >
+              <LogOut size={20} />
+              Logout
+            </button>
+          </div>
+        </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10 transform transition-all duration-500 ease-in-out scale-100 hover:scale-105">
-            <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-gray-200 capitalize">
-            {activeTab}
-            </h1>
+        {/* Overlay for small screens when sidebar is open */}
+        {sidebarOpen && (
+          <div
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-300"
+          ></div>
+        )}
+
+        {/* Main Content */}
+        <main className="flex-1 p-4 sm:p-6 md:p-10 space-y-8 md:ml-0">
+          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4 sm:p-6 md:p-8">
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+              <div className="flex items-center">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-purple-200 dark:bg-purple-500 text-purple-800 dark:text-white rounded-full flex items-center justify-center text-lg sm:text-xl font-bold">
+                  {profile.name ? profile.name.charAt(0).toUpperCase() : "U"}
+                </div>
+                <div className="ml-4">
+                  <h1 className="text-xl sm:text-2xl font-semibold capitalize">
+                    {activeTab}, {profile.name || "User"} {activeTab === "profile" ? "👤" : activeTab === "settings" ? "⚙️" : "🏠"}
+                  </h1>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+                    {activeTab === "profile" ? "Manage your profile details" : activeTab === "settings" ? "Customize your preferences" : "Welcome to your dashboard"}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleBackToDashboard}
+                className="bg-purple-500 text-white px-4 py-2 rounded-full hover:bg-purple-600 transition flex items-center gap-2 text-sm sm:text-base"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back to Dashboard
+              </button>
+            </div>
+            <hr className="my-4 border-gray-300 dark:border-gray-600" />
 
             {/* Profile Tab */}
             {activeTab === "profile" && (
-            <div className="space-y-8">
+              <div className="space-y-6">
                 {["name", "email", "phone"].map((field) => (
-                <div key={field}>
-                    <label className="block text-lg font-semibold mb-2 text-gray-700 dark:text-gray-300 capitalize">
-                    {field}
+                  <div key={field}>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 capitalize mb-2">
+                      {field}
                     </label>
                     <input
-                    type={field === "email" ? "email" : "text"}
-                    name={field}
-                    value={profile[field]}
-                    onChange={handleProfileChange}
-                    className="w-full px-5 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ease-in-out"
+                      type={field === "email" ? "email" : "text"}
+                      name={field}
+                      value={profile[field]}
+                      onChange={handleProfileChange}
+                      className="w-full py-3 px-4 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200 text-sm sm:text-base"
                     />
-                </div>
+                  </div>
                 ))}
                 <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className={`w-full ${isSaving ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"} text-white py-3 rounded-lg text-lg transition-all duration-300 ease-in-out transform hover:scale-105`}
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className={`w-full py-3 rounded-lg text-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+                    isSaving
+                      ? "bg-purple-400 cursor-not-allowed"
+                      : "bg-purple-600 hover:bg-purple-700 text-white hover:shadow-lg"
+                  }`}
                 >
-                {isSaving ? "Saving..." : "💾 Save Profile"}
+                  {isSaving ? "Saving..." : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      Save Profile
+                    </>
+                  )}
                 </button>
-            </div>
+              </div>
             )}
 
             {/* Settings Tab */}
             {activeTab === "settings" && (
-            <div className="space-y-8">
+              <div className="space-y-6">
                 {[{ label: "Notifications", name: "notifications" }].map((setting) => (
-                <div className="flex items-center justify-between" key={setting.name}>
-                    <label className="text-gray-700 dark:text-gray-300 font-medium text-lg">{setting.label}</label>
-                    <input
-                    type="checkbox"
-                    name={setting.name}
-                    checked={settings[setting.name]}
-                    onChange={handleSettingsChange}
-                    className="h-6 w-6 accent-purple-600"
-                    />
-                </div>
+                  <div className="flex items-center justify-between" key={setting.name}>
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-800 dark:text-white">{setting.label}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Receive updates via email</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name={setting.name}
+                        checked={settings[setting.name]}
+                        onChange={handleSettingsChange}
+                        className="sr-only peer"
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-500 dark:peer-focus:ring-purple-400 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-500"></div>
+                    </label>
+                  </div>
                 ))}
                 <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className={`w-full ${isSaving ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700"} text-white py-3 rounded-lg text-lg transition-all duration-300 ease-in-out transform hover:scale-105`}
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className={`w-full py-3 rounded-lg text-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
+                    isSaving
+                      ? "bg-purple-400 cursor-not-allowed"
+                      : "bg-purple-600 hover:bg-purple-700 text-white hover:shadow-lg"
+                  }`}
                 >
-                {isSaving ? "Saving..." : "⚙️ Save Settings"}
+                  {isSaving ? "Saving..." : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      Save Settings
+                    </>
+                  )}
                 </button>
-            </div>
+              </div>
             )}
-        </div>
+          </div>
         </main>
-
+      </div>
     </div>
   );
 }
