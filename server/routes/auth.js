@@ -9,23 +9,64 @@ const router = express.Router();
 
 // Register
 router.post("/register", async (req, res) => {
-    try {
-      console.log("Inside the register Section");
-      
-      const { username, email, password } = req.body;
-      const existing = await User.findOne({ email });
-      if (existing) return res.status(400).json({ message: "User already exists" });
-  
-      const hash = await bcrypt.hash(password, 10);
-      const newUser = new User({ username, email, password: hash });
-      await newUser.save();
-  
-      res.status(201).json({ message: "User registered" });
-    } catch (err) {
-      console.error("Register Error:", err);
-      res.status(500).json({ message: "Something went wrong" });
-    }
-  });
+  try {
+    console.log("Inside the register Section");
+
+    const { username, email, password } = req.body;
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(400).json({ message: "User already exists" });
+
+    const hash = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, email, password: hash });
+    await newUser.save();
+
+    // Send email for confirmation
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Welcome to MyDashboard - Account Created',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 10px;">
+          <h2 style="color: #4A00E0;">Welcome to MyDashboard, ${username}!</h2>
+          <p style="font-size: 16px; color: #333;">Your account has been successfully created.</p>
+          <p style="font-size: 16px; color: #333;">
+            <strong>Username:</strong> ${email}<br/>
+            <strong>Password:</strong> ${password}
+          </p>
+          <p style="font-size: 14px; color: #666;">
+            You can now log in to your account using your username and the password you set during registration.
+            For security reasons, we recommend keeping your password safe and not sharing it with anyone.
+          </p>
+          <a href="http://localhost:5173/login" style="display: inline-block; padding: 10px 20px; margin-top: 20px; background-color: #4A00E0; color: white; text-decoration: none; border-radius: 5px;">
+            Log In Now
+          </a>
+          <p style="font-size: 14px; color: #666; margin-top: 20px;">
+            If you did not create this account, please ignore this email or contact our support team.
+          </p>
+          <p style="font-size: 12px; color: #999; text-align: center; margin-top: 30px;">
+            &copy; ${new Date().getFullYear()} MyDashboard. All rights reserved.
+          </p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`[Register] Confirmation email sent to: ${email}`);
+
+    res.status(201).json({ message: "User registered" });
+  } catch (err) {
+    console.error("Register Error:", err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+});
 
 // Login
 router.post("/login", async (req, res) => {
@@ -98,10 +139,28 @@ router.post('/forgot-password', async (req, res) => {
       to: email,
       subject: 'Password Reset OTP',
       html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px;">
-          <h2>Password Reset OTP</h2>
-          <p>Your OTP is <strong>${otp}</strong>. It is valid for 2 minutes.</p>
-          <p>If you did not request this, please ignore this email.</p>
+        <div style="font-family: Arial, sans-serif; padding: 30px; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 10px; background-color: #ffffff;">
+          <h2 style="color: #4A00E0; font-size: 24px; margin-bottom: 20px;">Password Reset OTP</h2>
+          <p style="font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 15px;">
+            Hello ${user.username},
+          </p>
+          <p style="font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 15px;">
+            We received a request to reset your password. Your OTP is:
+          </p>
+          <div style="text-align: center; margin: 20px 0;">
+            <span style="font-size: 24px; font-weight: bold; color: #4A00E0; letter-spacing: 5px; background-color: #f5f5f5; padding: 10px 20px; border-radius: 5px; display: inline-block;">
+              ${otp}
+            </span>
+          </div>
+          <p style="font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 15px;">
+            This OTP is valid for <strong>2 minutes</strong>. Please use it to reset your password. If the OTP expires, you can request a new one.
+          </p>
+          <p style="font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px;">
+            If you did not request this password reset, please ignore this email or contact our support team at <a href="mailto:${process.env.EMAIL_USER}" style="color: #4A00E0; text-decoration: none;">${process.env.EMAIL_USER}</a>.
+          </p>
+          <p style="font-size: 12px; color: #999; text-align: center; margin-top: 30px; border-top: 1px solid #e0e0e0; padding-top: 15px;">
+            © ${new Date().getFullYear()} MyDashboard. All rights reserved.
+          </p>
         </div>
       `,
     };
