@@ -7,6 +7,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 import Profile from "./pages/Profile";
+import VerifyOtp from './components/VerifyOtp';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       <Route
         path="/dashboard"
         element={

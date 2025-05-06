@@ -50,76 +50,193 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// 🔁 Forgot password - generate token
-router.post('/api/auth/forgot-password', async (req, res) => {
-    const { email } = req.body;
-    
-    try {
-      const user = await User.findOne({ email });
-  
-      if (!user) {
-        return res.status(400).json({ message: "Email not found!" });
-      }
-  
-      // Generate a password reset token
-      const resetToken = crypto.randomBytes(32).toString('hex');
-      const resetTokenExpiration = Date.now() + 3600000; // 1 hour from now
-  
-      // Save the token and expiration date in the database (for validation later)
-      user.resetToken = resetToken;
-      user.resetTokenExpiration = resetTokenExpiration;
-      await user.save();
-  
-      // Create the reset link (this URL would be the frontend reset password page)
-      const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
-  
-      // Send the reset link to the user's email
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'darshan@sigvitas.com',
-          pass: 'aqhf klky wpct uuuu',
-        },
-      });
-  
-      const mailOptions = {
-        from: 'darshan@sigvitas.com',
-        to: email,
-        subject: 'Password Reset Request',
-        text: `Click the following link to reset your password: ${resetLink}`,
-      };
-  
-      await transporter.sendMail(mailOptions);
-  
-      res.status(200).json({ message: 'Password reset link sent to your email' });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error sending reset link' });
+// Forgot Password - Generate OTP
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    console.log(`[Forgot Password] Missing email: ${JSON.stringify(req.body)}`);
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log(`[Forgot Password] Email not found: ${email}`);
+      return res.status(400).json({ message: 'Email not found' });
     }
-  });
-  
-  // 🔁 Reset password using token
-  router.post("/reset-password/:token", async (req, res) => {
-    const { token } = req.params;
-    const { password } = req.body;
-  
-    try {
-      const user = await User.findOne({
-        resetToken: token,
-        resetTokenExpiry: { $gt: Date.now() }, // Not expired
-      });
-  
-      if (!user) return res.status(400).json({ message: "Invalid or expired token" });
-  
-      user.password = await bcrypt.hash(password, 10);
-      user.resetToken = undefined;
-      user.resetTokenExpiry = undefined;
-      await user.save();
-  
-      res.json({ message: "Password reset successful" });
-    } catch (err) {
-      res.status(500).json({ message: "Something went wrong" });
+
+    // Generate a 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiration = Date.now() + 2 * 60 * 1000; // 2 minutes
+
+    // Update user with OTP and expiration
+    user.resetOtp = otp;
+    user.resetOtpExpiration = otpExpiration;
+    await user.save();
+
+    // Verify save
+    const updatedUser = await User.findOne({ email });
+    if (!updatedUser.resetOtp || !updatedUser.resetOtpExpiration) {
+      console.error(`[Forgot Password] Failed to save OTP for: ${email}`);
+      return res.status(500).json({ message: 'Error saving OTP' });
     }
-  });
+
+    console.log(`[Forgot Password] Saved OTP: ${otp}, Expiration: ${new Date(otpExpiration).toISOString()}, Email: ${email}`);
+
+    // Send OTP via email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset OTP',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2>Password Reset OTP</h2>
+          <p>Your OTP is <strong>${otp}</strong>. It is valid for 2 minutes.</p>
+          <p>If you did not request this, please ignore this email.</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`[Forgot Password] OTP email sent to: ${email}`);
+
+    res.status(200).json({ message: 'OTP sent to your email' });
+  } catch (err) {
+    console.error(`[Forgot Password] Error: ${err.message}, Stack: ${err.stack}`);
+    res.status(500).json({ message: 'Error sending OTP' });
+  }
+});
+
+// Verify OTP
+router.post('/verify-otp', async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    console.log(`[Verify OTP] Missing email or OTP: ${JSON.stringify(req.body)}`);
+    return res.status(400).json({ message: 'Email and OTP are required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log(`[Verify OTP] Email not found: ${email}`);
+      return res.status(400).json({ message: 'Email not found' });
+    }
+
+    console.log(`[Verify OTP] User found: ${email}, resetOtp: ${user.resetOtp}, resetOtpExpiration: ${user.resetOtpExpiration}`);
+    console.log(`[Verify OTP] Received OTP: ${otp}, Type: ${typeof otp}`);
+    console.log(`[Verify OTP] Time Check - Expires: ${user.resetOtpExpiration ? new Date(user.resetOtpExpiration).toISOString() : 'null'}, Now: ${new Date().toISOString()}`);
+
+    if (!user.resetOtp || !user.resetOtpExpiration) {
+      console.log(`[Verify OTP] No OTP or expiration set for: ${email}`);
+      return res.status(400).json({ message: 'No OTP request found' });
+    }
+
+    if (user.resetOtp.toString() !== otp.toString()) {
+      console.log(`[Verify OTP] OTP mismatch - Received: ${otp}, Stored: ${user.resetOtp}`);
+      return res.status(400).json({ message: 'Invalid OTP' });
+    }
+
+    if (user.resetOtpExpiration < Date.now()) {
+      console.log(`[Verify OTP] OTP expired - Expiration: ${user.resetOtpExpiration}, Now: ${Date.now()}`);
+      return res.status(400).json({ message: 'Expired OTP' });
+    }
+
+    // Clear OTP after verification
+    user.resetOtp = null;
+    user.resetOtpExpiration = null;
+    await user.save();
+    console.log(`[Verify OTP] OTP cleared and verified successfully for: ${email}`);
+
+    res.status(200).json({ message: 'OTP verified successfully' });
+  } catch (err) {
+    console.error(`[Verify OTP] Error: ${err.message}, Stack: ${err.stack}`);
+    res.status(500).json({ message: 'Error verifying OTP' });
+  }
+});
+
+// Reset Password
+router.post('/reset-password', async (req, res) => {
+  console.log('Password Resetting...');
+
+  const { email, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Email not found!' });
+    }
+
+    // Hash and update password
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetOtp = null;
+    user.resetOtpExpiration = null;
+    await user.save();
+
+    res.status(200).json({ message: 'Password reset successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error resetting password' });
+  }
+});
+
+// GET /api/auth/user
+router.get('/user', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1]; // Expect "Bearer <token>"
+    if (!token) {
+      console.log('[Get User] No token provided');
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('username email');
+    if (!user) {
+      console.log(`[Get User] User not found: ${decoded.id}`);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log(`[Get User] Fetched user: ${user.email}`);
+    res.status(200).json({ username: user.username, email: user.email });
+  } catch (err) {
+    console.error(`[Get User] Error: ${err.message}, Stack: ${err.stack}`);
+    res.status(401).json({ message: 'Invalid or expired token' });
+  }
+});
+
+// GET /api/patents
+router.get('/', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      console.log('[Patent Fetch] No token provided');
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      console.log(`[Patent Fetch] User not found: ${decoded.id}`);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const patents = await Patent.find();
+    console.log(`[Patent Fetch] Fetched ${patents.length} patents for user: ${user.email}`);
+    res.status(200).json(patents);
+  } catch (err) {
+    console.error(`[Patent Fetch] Error: ${err.message}, Stack: ${err.stack}`);
+    res.status(500).json({ message: 'Error fetching patents' });
+  }
+});
 
 module.exports = router;

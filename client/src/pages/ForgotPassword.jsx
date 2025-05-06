@@ -1,10 +1,10 @@
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [msg, setMsg] = useState("");
+  const [email, setEmail] = useState('');
+  const [msg, setMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -12,14 +12,14 @@ function ForgotPassword() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/forgot-password", { email });
-      setMsg(res.data.message); // Success message
-      // After success, redirect to login page
+      const res = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+      setMsg(res.data.message);
+      // Redirect to OTP verification page after success
       setTimeout(() => {
-        navigate("/login");
-      }, 2000); // Redirect after 2 seconds
+        navigate('/verify-otp', { state: { email } }); // Pass email to the next page
+      }, 2000);
     } catch (err) {
-      setMsg("Error sending reset link");
+      setMsg(err.response?.data?.message || 'Error sending OTP');
     } finally {
       setLoading(false);
     }
@@ -43,11 +43,13 @@ function ForgotPassword() {
             className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition"
             disabled={loading}
           >
-            {loading ? "Sending..." : "Send Reset Link"}
+            {loading ? 'Sending...' : 'Send OTP'}
           </button>
         </form>
         {msg && (
-          <p className={`mt-3 ${msg.includes("Error") ? "text-red-500" : "text-green-700"} text-center`}>
+          <p
+            className={`mt-3 ${msg.includes('Error') ? 'text-red-500' : 'text-green-700'} text-center`}
+          >
             {msg}
           </p>
         )}
