@@ -45,7 +45,7 @@ const sanitizeInventor = (inventor) => {
 export default function Dashboard() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
-  const [user, setUser] = useState({ username: "", email: "" });
+  const [user, setUser] = useState({ username: "", email: "", totalPatents: "" });
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState("");
@@ -65,7 +65,7 @@ export default function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         });
         // console.log(`[Dashboard] Fetched user: ${response.data.username}`);
-        setUser({ username: response.data.username, email: response.data.email });
+        setUser({ username: response.data.username, email: response.data.email, totalPatents: response.data.totalPatents });
       } catch (err) {
         // console.error(`[Dashboard] User Error: ${err.response?.data?.message || err.message}`);
         setError(err.response?.data?.message || "Error fetching user data");
@@ -216,6 +216,7 @@ export default function Dashboard() {
               )}
               <hr className="my-4 border-gray-300 dark:border-gray-600" />
               <p className="text-lg">This is your personalized dashboard. Search for patents below!</p>
+              <p>Total Patents: <strong>{user.totalPatents}</strong></p>
             </div>
             {/* Search Bar */}
             <div className="mb-10 flex items-center justify-between flex-wrap gap-4">
@@ -246,12 +247,12 @@ export default function Dashboard() {
             </div>
 
             {/* Patents Table with Scrollbar */}
-            <div className="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-8 mt-8">
+            <div className="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4 mt-8"> 
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
                 Search Results
               </h2>
               <PerfectScrollbar
-                className="max-h-[51.3vh] w-full"
+                className="max-h-[49.3vh] w-full"
                 options={{
                   wheelSpeed: 0.5,
                   wheelPropagation: false,

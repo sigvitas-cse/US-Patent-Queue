@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const crypto = require("crypto");
 const nodemailer = require('nodemailer');
+const Patent = require('../models/Patent')
 
 const router = express.Router();
 
@@ -265,8 +266,9 @@ router.get('/user', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    const totalPatents= await Patent.countDocuments();
     console.log(`[Get User] Fetched user: ${user.email}`);
-    res.status(200).json({ username: user.username, email: user.email });
+    res.status(200).json({ username: user.username, email: user.email, totalPatents });
   } catch (err) {
     console.error(`[Get User] Error: ${err.message}, Stack: ${err.stack}`);
     res.status(401).json({ message: 'Invalid or expired token' });
