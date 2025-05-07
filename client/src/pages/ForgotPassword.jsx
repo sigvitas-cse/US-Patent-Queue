@@ -8,7 +8,9 @@ function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+  // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+  const API_URL = import.meta.env.VITE_API_URL || "https://usptoq.onrender.com";
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

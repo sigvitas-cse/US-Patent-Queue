@@ -17,7 +17,9 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
-  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+  // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+  const API_URL = import.meta.env.VITE_API_URL || "https://usptoq.onrender.com";
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
