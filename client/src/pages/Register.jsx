@@ -8,9 +8,13 @@ export default function Register() {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // await axios.post(`${API_URL}/api/auth/register`, formData);
       await axios.post("http://localhost:5000/api/auth/register", formData);
       alert("Registration successful!");
       navigate("/login");

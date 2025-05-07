@@ -11,6 +11,9 @@ function ResetPassword() {
   const location = useLocation();
   const { email } = location.state || {};
 
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -24,7 +27,10 @@ function ResetPassword() {
     setLoading(true);
     setMsg('');
     try {
-      console.log(`[ResetPassword] Submitting new password for email: ${email}`);
+      // console.log(`[ResetPassword] Submitting new password for email: ${email}`);
+
+      
+      // const res = await axios.post(`${API_URL}/api/auth/reset-password`, {
       const res = await axios.post('http://localhost:5000/api/auth/reset-password', {
         email,
         newPassword: password,

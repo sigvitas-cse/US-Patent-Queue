@@ -17,8 +17,12 @@ export default function Settings() {
       return;
     }
 
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+
+
     const fetchUser = async () => {
       try {
+        // const response = await axios.get(`${API_URL}/api/auth/user`, {
         const response = await axios.get("http://localhost:5000/api/auth/user", {
           headers: { Authorization: `Bearer ${token}` },
         });

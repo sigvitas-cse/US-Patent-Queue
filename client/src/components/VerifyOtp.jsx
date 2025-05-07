@@ -11,6 +11,9 @@ function VerifyOtp() {
   const location = useLocation();
   const { email } = location.state || {};
 
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+
+
   useEffect(() => {
     if (!email) {
       navigate('/forgot-password');
@@ -45,6 +48,9 @@ function VerifyOtp() {
     setMsg('');
     try {
       console.log(`[VerifyOtp] Submitting OTP: ${otp}, Email: ${email}, Client Time: ${new Date().toISOString()}`);
+
+      
+        // const res = await axios.post(`${API_URL}/api/auth/verify-otp`, { email, otp });
       const res = await axios.post('http://localhost:5000/api/auth/verify-otp', { email, otp });
       setMsg(res.data.message);
       setTimeout(() => {
@@ -68,6 +74,9 @@ function VerifyOtp() {
     setMsg('');
     try {
       console.log(`[VerifyOtp] Resending OTP for email: ${email}`);
+
+      
+        // const res = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
       const res = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
       setMsg('New OTP sent to your email');
       setTimeLeft(120);

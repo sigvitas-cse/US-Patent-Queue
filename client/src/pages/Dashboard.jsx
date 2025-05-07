@@ -16,6 +16,8 @@ export default function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -24,9 +26,9 @@ export default function Dashboard() {
       navigate("/login");
       return;
     }
-
     const fetchUser = async () => {
       try {
+        // const response = await axios.get(`${API_URL}/api/auth/user`, {
         const response = await axios.get("http://localhost:5000/api/auth/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -51,6 +53,8 @@ export default function Dashboard() {
     try {
       setError("");
       const token = localStorage.getItem("token");
+
+        // const response = await axios.get(`${API_URL}/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
       const response = await axios.get(`http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
         headers: { Authorization: `Bearer ${token}` },
       });

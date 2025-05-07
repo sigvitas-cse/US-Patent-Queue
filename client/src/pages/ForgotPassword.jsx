@@ -8,10 +8,13 @@ function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
+      // const res = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
       const res = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
       setMsg(res.data.message);
       // Redirect to OTP verification page after success
