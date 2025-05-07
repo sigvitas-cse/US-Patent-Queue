@@ -14,8 +14,8 @@ function ForgotPassword() {
     e.preventDefault();
     setLoading(true);
     try {
-      // const res = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
-      const res = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+      const res = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
+      // const res = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
       setMsg(res.data.message);
       // Redirect to OTP verification page after success
       setTimeout(() => {

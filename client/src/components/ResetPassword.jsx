@@ -29,9 +29,9 @@ function ResetPassword() {
     try {
       // console.log(`[ResetPassword] Submitting new password for email: ${email}`);
 
-      
-      // const res = await axios.post(`${API_URL}/api/auth/reset-password`, {
-      const res = await axios.post('http://localhost:5000/api/auth/reset-password', {
+
+      const res = await axios.post(`${API_URL}/api/auth/reset-password`, {
+      // const res = await axios.post('http://localhost:5000/api/auth/reset-password', {
         email,
         newPassword: password,
       });

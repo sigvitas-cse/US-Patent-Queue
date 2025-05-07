@@ -28,8 +28,8 @@ export default function Dashboard() {
     }
     const fetchUser = async () => {
       try {
-        // const response = await axios.get(`${API_URL}/api/auth/user`, {
-        const response = await axios.get("http://localhost:5000/api/auth/user", {
+        const response = await axios.get(`${API_URL}/api/auth/user`, {
+        // const response = await axios.get("http://localhost:5000/api/auth/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser({ username: response.data.username, email: response.data.email, totalPatents: response.data.totalPatents });
@@ -54,8 +54,8 @@ export default function Dashboard() {
       setError("");
       const token = localStorage.getItem("token");
 
-        // const response = await axios.get(`${API_URL}/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
-      const response = await axios.get(`http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
+        const response = await axios.get(`${API_URL}/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
+      // const response = await axios.get(`http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const results = Array.isArray(response.data) ? response.data : [response.data];
