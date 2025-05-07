@@ -8,7 +8,7 @@ const patentRoutes = require('./routes/patentRoutes');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Allow Vite frontend
+  origin: ['https://usptoq-1.onrender.com', 'http://localhost:5173'], // Allow Vite frontend
   methods: ['GET', 'POST'],
   credentials: true,
 }));
