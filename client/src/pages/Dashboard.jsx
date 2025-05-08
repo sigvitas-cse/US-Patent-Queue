@@ -17,32 +17,39 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isTokenChecked, setIsTokenChecked] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("[Dashboard] Token found:", !!token);
+
     if (!token) {
-      console.log("[Dashboard] No token found, redirecting to login");
-      navigate("/login");
+      console.log("[Dashboard] No token, redirecting to login");
+      navigate("/login", { replace: true });
       return;
     }
 
     const fetchUser = async () => {
       try {
         setLoading(true);
+        console.log("[Dashboard] Fetching user data...");
         const response = await axios.get("http://localhost:5000/api/auth/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log("[Dashboard] User data fetched:", response.data);
         setUser({
           username: response.data.username,
           email: response.data.email,
           totalPatents: response.data.totalPatents,
         });
       } catch (err) {
-        setError(err.response?.data?.message || "Error fetching user data");
-        localStorage.removeItem("token");
-        navigate("/login");
+        console.error("[Dashboard] Error fetching user:", err);
+        setError(err.response?.data?.message || "Failed to load user data. Please try again.");
+        // Don't redirect; show error on dashboard
       } finally {
         setLoading(false);
+        setIsTokenChecked(true);
+        console.log("[Dashboard] Token check complete, rendering dashboard");
       }
     };
 
@@ -59,6 +66,7 @@ export default function Dashboard() {
     try {
       setError("");
       const token = localStorage.getItem("token");
+      console.log("[Dashboard] Searching patents with query:", searchQuery);
       const response = await axios.get(
         `http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`,
         {
@@ -70,12 +78,15 @@ export default function Dashboard() {
       try {
         deepCopyResults = JSON.parse(JSON.stringify(results));
       } catch (copyError) {
+        console.error("[Dashboard] Error copying search results:", copyError);
         setError("Error processing search results. Please try again.");
         setSearchResults([]);
         return;
       }
       setSearchResults(deepCopyResults);
+      console.log("[Dashboard] Search results set:", deepCopyResults);
     } catch (err) {
+      console.error("[Dashboard] Error searching patents:", err);
       setError(err.response?.data?.message || "Error searching patents");
       setSearchResults([]);
     }
@@ -84,12 +95,40 @@ export default function Dashboard() {
   const handleLogout = () => {
     console.log("[Dashboard] Logging out");
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  // Render nothing until token is checked
+  if (!isTokenChecked) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
+        <svg
+          className="animate-spin h-8 w-8 text-green-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    );
+  }
 
   return (
     <ErrorBoundary>
