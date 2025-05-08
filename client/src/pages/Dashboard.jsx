@@ -16,10 +16,7 @@ export default function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
-  // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
-  const API_URL = import.meta.env.VITE_API_URL || "https://usptoq.onrender.com";
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,17 +25,24 @@ export default function Dashboard() {
       navigate("/login");
       return;
     }
+
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/auth/user`, {
-        // const response = await axios.get("http://localhost:5000/api/auth/user", {
+        setLoading(true);
+        const response = await axios.get("http://localhost:5000/api/auth/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUser({ username: response.data.username, email: response.data.email, totalPatents: response.data.totalPatents });
+        setUser({
+          username: response.data.username,
+          email: response.data.email,
+          totalPatents: response.data.totalPatents,
+        });
       } catch (err) {
         setError(err.response?.data?.message || "Error fetching user data");
         localStorage.removeItem("token");
         navigate("/login");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -55,11 +59,12 @@ export default function Dashboard() {
     try {
       setError("");
       const token = localStorage.getItem("token");
-
-        const response = await axios.get(`${API_URL}/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
-      // const response = await axios.get(`http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        `http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const results = Array.isArray(response.data) ? response.data : [response.data];
       let deepCopyResults;
       try {
@@ -89,7 +94,7 @@ export default function Dashboard() {
   return (
     <ErrorBoundary>
       <div className={`${darkMode ? "dark" : ""}`}>
-        <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
+        <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors w-full overflow-x-hidden">
           <Sidebar
             isSidebarOpen={isSidebarOpen}
             toggleSidebar={toggleSidebar}
@@ -98,8 +103,8 @@ export default function Dashboard() {
             navigate={navigate}
             handleLogout={handleLogout}
           />
-          <main className="flex-1 p-10 space-y-8 md:ml-0">
-            <Header user={user} error={error} darkMode={darkMode} />
+          <main className="flex-1 p-3 sm:p-8 space-y-6 md:ml-0">
+            <Header user={user} error={error} darkMode={darkMode} loading={loading} />
             <SearchBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -125,22 +130,22 @@ export default function Dashboard() {
             }
             .ps__thumb-y,
             .ps__thumb-x {
-              background-color: #a0aec0 !important; /* Gray color for light mode */
+              background-color: #a0aec0 !important;
               border-radius: 4px;
-              width: 8px; /* Slim scrollbar */
+              width: 6px;
               cursor: pointer;
             }
             .dark .ps__thumb-y,
             .dark .ps__thumb-x {
-              background-color: #718096 !important; /* Lighter gray for dark mode */
+              background-color: #718096 !important;
             }
             .ps__thumb-y:hover,
             .ps__thumb-x:hover {
-              background-color: #7f9cf5 !important; /* Indigo hover effect for light mode */
+              background-color: #7f9cf5 !important;
             }
             .dark .ps__thumb-y:hover,
             .dark .ps__thumb-x:hover {
-              background-color: #90cdf4 !important; /* Lighter indigo for dark mode */
+              background-color: #90cdf4 !important;
             }
           `}
         </style>
