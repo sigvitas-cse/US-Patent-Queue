@@ -28,7 +28,10 @@ export default function Dashboard() {
       navigate("/login", { replace: true });
       return;
     }
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    
+  // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+  const API_URL = import.meta.env.VITE_API_URL || "https://usptoq.onrender.com";
+
 
 
     const fetchUser = async () => {
