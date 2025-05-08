@@ -28,12 +28,15 @@ export default function Dashboard() {
       navigate("/login", { replace: true });
       return;
     }
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 
     const fetchUser = async () => {
       try {
         setLoading(true);
         console.log("[Dashboard] Fetching user data...");
-        const response = await axios.get("http://localhost:5000/api/auth/user", {
+        const response = await axios.get(`${API_URL}/api/auth/user`, {
+        // const response = await axios.get("http://localhost:5000/api/auth/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("[Dashboard] User data fetched:", response.data);
@@ -67,8 +70,9 @@ export default function Dashboard() {
       setError("");
       const token = localStorage.getItem("token");
       console.log("[Dashboard] Searching patents with query:", searchQuery);
-      const response = await axios.get(
-        `http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`,
+      const response = await axios.get( 
+          `${API_URL}/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`,
+        // `http://localhost:5000/api/patents/search?patent_numbers=${encodeURIComponent(searchQuery)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
