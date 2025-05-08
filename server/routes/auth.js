@@ -46,7 +46,7 @@ router.post("/register", async (req, res) => {
             You can now log in to your account using your username and the password you set during registration.
             For security reasons, we recommend keeping your password safe and not sharing it with anyone.
           </p>
-          <a href="http://localhost:5173/login" style="display: inline-block; padding: 10px 20px; margin-top: 20px; background-color: #4A00E0; color: white; text-decoration: none; border-radius: 5px;">
+          <a href="https://usptoq-1.onrender.com/login" style="display: inline-block; padding: 10px 20px; margin-top: 20px; background-color: #4A00E0; color: white; text-decoration: none; border-radius: 5px;">
             Log In Now
           </a>
           <p style="font-size: 14px; color: #666; margin-top: 20px;">
