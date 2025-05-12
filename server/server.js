@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json"); // Path to your swagger.json
+const swaggerDocument = require("./config/swagger.json");
 require("dotenv").config();
 const authRoutes = require("./routes/auth");
 const patentRoutes = require("./routes/patentRoutes");
@@ -36,5 +36,5 @@ mongoose
   .catch((err) => console.error(err));
 
 // Start server
-const PORT = process.env.PORT || 10000; // Use 10000 for Render
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
