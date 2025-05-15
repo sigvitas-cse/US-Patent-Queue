@@ -1,0 +1,21 @@
+ssh root@82.29.165.134
+Tom#kAlf0926### 
+
+
+openssl req -new -newkey rsa:2048 -nodes -keyout uspatentq.com.key -out uspatentq.com.csr
+
+
+When prompted, fill in the details:
+Common Name (e.g., server FQDN or YOUR name): Enter *.uspatentq.com (this makes it a wildcard certificate for all subdomains of uspatentq.com).
+Country Name: IN
+State or Province Name: Karnataka
+Locality Name (e.g., city): Mysuru
+Organization Name: Sigivitas and Company
+Organizational Unit Name: IT
+Email Address: mitdverma@email.com
+Challenge Password: Leave blank (press Enter).
+Optional Company Name: Leave blank (press Enter).
+
+
+cat uspatentq.com.csr
+

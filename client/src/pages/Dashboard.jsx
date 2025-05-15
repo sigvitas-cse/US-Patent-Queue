@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [isTokenChecked, setIsTokenChecked] = useState(false);
 
   // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
-  const API_URL = import.meta.env.VITE_API_URL || "https://usptoq.onrender.com";
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,7 +33,7 @@ export default function Dashboard() {
     }
     
   // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
-  const API_URL = import.meta.env.VITE_API_URL || "https://usptoq.onrender.com";
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
 
 
 

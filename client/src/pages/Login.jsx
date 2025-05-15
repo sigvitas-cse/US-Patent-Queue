@@ -12,7 +12,7 @@ export default function Login() {
 
   // Use localhost for development, fallback to production URL
   // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
-  const API_URL = import.meta.env.VITE_API_URL || "https://usptoq.onrender.com";
+  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
 
 
   const handleSubmit = async (e) => {
