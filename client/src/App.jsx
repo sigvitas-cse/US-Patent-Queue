@@ -1,4 +1,4 @@
-// src/App.jsx
+
 import { Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Register from './pages/Register';
@@ -10,6 +10,11 @@ import Profile from "./pages/Profile";
 import VerifyOtp from './components/VerifyOtp';
 import ResetPassword from './components/ResetPassword';
 import Settings from "./pages/Settings";
+import Explore from "./pages/Explore";
+import News from "./pages/News";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
 
 function App() {
   return (
@@ -20,8 +25,13 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/settings" element={<Settings />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/explore" element={<Explore />} />
+      <Route path="/news" element={<News />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/privacy" element={<Privacy />} />
       <Route
         path="/dashboard"
         element={
