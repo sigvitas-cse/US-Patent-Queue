@@ -1,13 +1,13 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "USPTOQ API",
+    "title": "US Patent Queue API",
     "version": "1.0.0",
-    "description": "API for USPTOQ application"
+    "description": "API for US Patent Queue application"
   },
   "servers": [
     {
-      "url": "https://usptoq.onrender.com",
+      "url": "https://uspatentq.com",
       "description": "Production server"
     },
     {

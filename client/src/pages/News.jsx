@@ -42,7 +42,7 @@ export default function News() {
     <div className="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 min-h-screen flex flex-col">
       <header className="bg-white shadow">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center">
-          <h1 className="text-xl sm:text-2xl font-bold text-purple-600">US Patent Quew</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-purple-600">US Patent Queue</h1>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4 sm:mt-0">
             <Link to="/" className="text-base sm:text-lg text-gray-600 hover:text-purple-600">Home</Link>
             <Link to="/explore" className="text-base sm:text-lg text-gray-600 hover:text-purple-600">Explore</Link>
@@ -64,7 +64,7 @@ export default function News() {
       </section>
       <footer className="py-8 bg-gray-800 text-white text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-sm sm:text-base">© 2025 US Patent Quew. All rights reserved.</p>
+          <p className="text-sm sm:text-base">© 2025 US Patent Queue. All rights reserved.</p>
           <div className="mt-4 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
             <Link to="/about" className="text-sm sm:text-base hover:text-purple-400">About</Link>
             <Link to="/contact" className="text-sm sm:text-base hover:text-purple-400">Contact</Link>

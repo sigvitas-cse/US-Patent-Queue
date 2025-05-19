@@ -46,7 +46,7 @@ export default function Landing() {
       <section className="py-12 sm:py-16 md:py-20 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-800 mb-6">
-            Discover the World of <span className="text-purple-600">US Patent Quew</span>
+            Discover the World of <span className="text-purple-600">US Patent Queue</span>
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Your premier source for patent insights, news, and trends. Explore cutting-edge innovations and stay ahead.
@@ -108,7 +108,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="py-8 bg-gray-800 text-white text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-sm sm:text-base">© 2025 US Patent Quew. All rights reserved.</p>
+          <p className="text-sm sm:text-base">© 2025 US Patent Queue. All rights reserved.</p>
           <div className="mt-4 flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
             <Link to="/about" className="text-sm sm:text-base hover:text-purple-400">About</Link>
             <Link to="/contact" className="text-sm sm:text-base hover:text-purple-400">Contact</Link>

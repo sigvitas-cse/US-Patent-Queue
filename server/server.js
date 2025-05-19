@@ -11,7 +11,7 @@ const app = express();
 
 // CORS configuration
 app.use(cors({
-  origin: ["https://usptoq-1.onrender.com", "http://localhost:5173"],
+  origin: ["https://uspatentq.com", "http://localhost:5173"],
   methods: ["GET", "POST"],
   credentials: true,
 }));
