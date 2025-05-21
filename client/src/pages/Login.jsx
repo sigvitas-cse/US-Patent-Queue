@@ -1,8 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
-export default function Login() {
+export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -10,10 +11,7 @@ export default function Login() {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Use localhost for development, fallback to production URL
-  // const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
   const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,54 +45,119 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900 p-3 sm:p-6">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm"
-      >
-        <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-4 text-center">
-          Login
-        </h2>
-        {error && (
-          <p className="text-red-500 text-xs sm:text-sm text-center mb-3">{error}</p>
-        )}
-        <div className="space-y-3">
-          <div>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full py-1.5 sm:py-2 px-3 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-xs sm:text-sm"
-              required
-            />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+      {/* Header */}
+      <header className="bg-white dark:bg-gray-800 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div className="flex items-center">
+              <button
+                onClick={() => navigate(-1)}
+                className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                aria-label="Go back"
+              >
+                <ArrowLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              </button>
+              <button
+                onClick={() => navigate("/")}
+                className="text-xl font-semibold text-gray-800 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition"
+                aria-label="Go to home page"
+              >
+                PatentQ
+              </button>
+            </div>
+            <div className="flex items-center space-x-4">
+              <a
+                href="/signup"
+                className="text-sm text-purple-600 hover:text-purple-800 dark:hover:text-purple-400 transition"
+              >
+                Create Account
+              </a>
+            </div>
           </div>
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full py-1.5 sm:py-2 px-3 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-xs sm:text-sm"
-              required
-            />
+        </header>
+
+      {/* Main Content */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 w-full max-w-md">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
+            Welcome Back
+          </h2>
+          {error && (
+            <p className="text-red-500 text-sm text-center mb-4 bg-red-50 dark:bg-red-900/50 p-2 rounded">
+              {error}
+            </p>
+          )}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-md bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-md bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition disabled:opacity-50 text-sm font-medium"
+            >
+              {loading ? "Logging in..." : "Sign In"}
+            </button>
+          </form>
+          <div className="mt-4 text-center space-y-2">
+            <a
+              href="/forgot-password"
+              className="text-purple-600 hover:underline text-sm"
+            >
+              Forgot Password?
+            </a>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Don't have an account?{" "}
+              <a
+                href="/register"
+                className="text-purple-600 hover:underline"
+              >
+                Sign Up
+              </a>
+            </p>
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-purple-600 text-white py-1.5 sm:py-2 rounded hover:bg-purple-700 transition disabled:opacity-50 text-xs sm:text-sm"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
         </div>
-        <div className="mt-3 text-center">
-          <a href="/forgot-password" className="text-purple-600 hover:underline text-xs sm:text-sm">
-            Forgot Password?
-          </a>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-800 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-600 dark:text-gray-400">
+          &copy; {new Date().getFullYear()} PatentQ. All rights reserved.
         </div>
-      </form>
+      </footer>
     </div>
   );
 }
