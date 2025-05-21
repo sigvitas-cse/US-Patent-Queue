@@ -9,8 +9,6 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
@@ -22,11 +20,10 @@ export default function ForgotPassword() {
       setLoading(true);
       setMsg("");
       console.log("[ForgotPassword] Sending OTP request for email:", email);
-      console.log("[ForgotPassword] API URL:", `${API_URL}/api/auth/forgot-password`);
+      console.log("[ForgotPassword] API URL:", `http://localhost:5000/api/auth/forgot-password`);
 
       const res = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
-      // const res = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
-
+      // const res = await axios.post("http://localhost:5000/api/auth/forgot-password", { email });
       setMsg(res.data.message);
       console.log("[ForgotPassword] OTP request successful:", res.data.message);
       setTimeout(() => {
@@ -42,6 +39,11 @@ export default function ForgotPassword() {
     }
   };
 
+  // Navigation functions
+  const signup = () => navigate("/register");
+  const login = () => navigate("/login");
+  const home = () => navigate("/");
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
@@ -56,7 +58,7 @@ export default function ForgotPassword() {
               <ArrowLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
             <button
-              onClick={() => navigate("/")}
+              onClick={home}
               className="text-xl font-semibold text-gray-800 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition"
               aria-label="Go to home page"
             >
@@ -64,18 +66,18 @@ export default function ForgotPassword() {
             </button>
           </div>
           <div className="flex items-center space-x-4">
-            <a
-              href="/login"
+            <button
+              onClick={login}
               className="text-sm text-purple-600 hover:text-purple-800 dark:hover:text-purple-400 transition"
             >
               Sign In
-            </a>
-            <a
-              href="/signup"
+            </button>
+            <button
+              onClick={signup}
               className="text-sm text-purple-600 hover:text-purple-800 dark:hover:text-purple-400 transition"
             >
               Sign Up
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -127,9 +129,12 @@ export default function ForgotPassword() {
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Remember your password?{" "}
-              <a href="/login" className="text-purple-600 hover:underline">
+              <button
+                onClick={login}
+                className="text-purple-600 hover:underline"
+              >
                 Sign In
-              </a>
+              </button>
             </p>
           </div>
         </div>

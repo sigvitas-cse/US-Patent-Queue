@@ -9,9 +9,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-
   const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,37 +44,42 @@ export default function LoginPage() {
     }
   };
 
+  // Navigation functions
+  const signup = () => navigate("/register");
+  const login = () => navigate("/login");
+  const home = () => navigate("/");
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <div className="flex items-center">
-              <button
-                onClick={() => navigate(-1)}
-                className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-                aria-label="Go back"
-              >
-                <ArrowLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-              </button>
-              <button
-                onClick={() => navigate("/")}
-                className="text-xl font-semibold text-gray-800 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition"
-                aria-label="Go to home page"
-              >
-                PatentQ
-              </button>
-            </div>
-            <div className="flex items-center space-x-4">
-              <a
-                href="/signup"
-                className="text-sm text-purple-600 hover:text-purple-800 dark:hover:text-purple-400 transition"
-              >
-                Create Account
-              </a>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <button
+              onClick={() => navigate(-1)}
+              className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+              aria-label="Go back"
+            >
+              <ArrowLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            </button>
+            <button
+              onClick={home}
+              className="text-xl font-semibold text-gray-800 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition"
+              aria-label="Go to home page"
+            >
+              PatentQ
+            </button>
           </div>
-        </header>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={signup}
+              className="text-sm text-purple-600 hover:text-purple-800 dark:hover:text-purple-400 transition"
+            >
+              Create Account
+            </button>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
@@ -133,20 +138,20 @@ export default function LoginPage() {
             </button>
           </form>
           <div className="mt-4 text-center space-y-2">
-            <a
-              href="/forgot-password"
+            <button
+              onClick={() => navigate("/forgot-password")}
               className="text-purple-600 hover:underline text-sm"
             >
               Forgot Password?
-            </a>
+            </button>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Don't have an account?{" "}
-              <a
-                href="/register"
+              <button
+                onClick={signup}
                 className="text-purple-600 hover:underline"
               >
                 Sign Up
-              </a>
+              </button>
             </p>
           </div>
         </div>
@@ -155,7 +160,7 @@ export default function LoginPage() {
       {/* Footer */}
       <footer className="bg-white dark:bg-gray-800 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-600 dark:text-gray-400">
-          &copy; {new Date().getFullYear()} PatentQ. All rights reserved.
+          © {new Date().getFullYear()} PatentQ. All rights reserved.
         </div>
       </footer>
     </div>

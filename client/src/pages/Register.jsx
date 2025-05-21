@@ -9,9 +9,9 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-
   const API_URL = import.meta.env.VITE_API_URL || "https://uspatentq.com";
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +41,11 @@ export default function RegisterPage() {
     }
   };
 
+  // Navigation functions
+  const signup = () => navigate("/register");
+  const login = () => navigate("/login");
+  const home = () => navigate("/");
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
@@ -55,7 +60,7 @@ export default function RegisterPage() {
               <ArrowLeftIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
             <button
-              onClick={() => navigate("/")}
+              onClick={home}
               className="text-xl font-semibold text-gray-800 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition"
               aria-label="Go to home page"
             >
@@ -63,12 +68,12 @@ export default function RegisterPage() {
             </button>
           </div>
           <div className="flex items-center space-x-4">
-            <a
-              href="/login"
+            <button
+              onClick={login}
               className="text-sm text-purple-600 hover:text-purple-800 dark:hover:text-purple-400 transition"
             >
               Sign In
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -150,12 +155,12 @@ export default function RegisterPage() {
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Already have an account?{" "}
-              <a
-                href="/login"
+              <button
+                onClick={login}
                 className="text-purple-600 hover:underline"
               >
                 Sign In
-              </a>
+              </button>
             </p>
           </div>
         </div>
